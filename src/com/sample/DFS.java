@@ -19,8 +19,9 @@ public class DFS {
 	int[] color;      //Judge if the related node is visited. 0:White 1£ºGray 2 Black
 	int time=0;       //program time
 	int[] ans;        // the ancestor. -1 : NIL
-	int[] discover;
-	int[] finish;
+	int[] discover;   //first time see the node
+	int[] finish;     //leave time
+	ArrayList<Integer> dfsOrder=new ArrayList<Integer>();
 	public DFS(HashMap<Integer, ArrayList<Integer>> bigGraph,int nodes)
 	{
 		this.bigGraph=bigGraph;
@@ -32,6 +33,7 @@ public class DFS {
 	}
 	public void traverse()
 	{
+		dfsOrder.clear();
 		for(int i=0;i<nodes;i++)
 		{
 			color[i]=0;
@@ -42,11 +44,48 @@ public class DFS {
 		{
 			if(color[start]==0)
 				DFS_VISIT(start);
+			dfsOrder.add(-1);
 		}
+	}
+	public void traverseInverse()
+	{
+		dfsOrder.clear();
+		for(int i=0;i<nodes;i++)
+		{
+			color[i]=0;
+			ans[i]=-1;
+		}
+		time=0;
+		int[] traOrder=traOrder();
+		for(int i=0;i<nodes;i++)
+			if(color[traOrder[i]]==0)
+			{
+				DFS_VISIT(traOrder[i]);
+				dfsOrder.add(-1);
+			}
+			
+	}
+	public int[] traOrder()
+	{
+		int[] result=new int[nodes];
+		for(int i=0;i<nodes;i++)
+		{
+			int max=finish[0];
+			result[i]=0;
+			for(int j=0;j<nodes;j++)
+				if(max<finish[j])
+				{
+					max=finish[j];
+					result[i]=j;
+				}
+			finish[result[i]]=-1;
+		}
+		return result;
 	}
 	public void DFS_VISIT(int start)
 	{
 		System.out.println(start);
+		dfsOrder.add(start);
 		color[start]=1;
 		time++;
 		discover[start]=time;
@@ -63,9 +102,11 @@ public class DFS {
 		finish[start]=time;
 	}
 	public static void main(String[] args) throws IOException {
-		SnapReader sr=new SnapReader("dataset/Email-Enron.txt");
+		SnapReader sr=new SnapReader("dataset/test.txt");
 		DFS dfs=new DFS(sr.bigGraph,sr.nodes);
 		dfs.traverse();
+		for(int i=0;i<dfs.finish.length;i++)
+			System.out.println(dfs.finish[i]);
 		
 	}
 

@@ -2,11 +2,11 @@ package com.sample;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /** 
  * @author ½¯¼ÒöÎ  E-mail: samjjx@hotmail.com 
@@ -53,10 +53,71 @@ public class SnapReader {
 				bigGraph.put(vertex1, vList);
 			}
 		}
-		
+		System.out.println(eliminateSCC(bigGraph));
+	}
+	public HashMap<Integer, ArrayList<Integer>> inverse(HashMap<Integer, ArrayList<Integer>> bigGraph)
+	{
+		HashMap<Integer, ArrayList<Integer>> bigGraphInverse=new HashMap<Integer, ArrayList<Integer>>();
+		Set<Integer> vertexSet=bigGraph.keySet();
+		for(int vertexV:vertexSet)
+		{
+			ArrayList<Integer> linkList=bigGraph.get(vertexV);
+			for(int vertexU:linkList)
+			{
+				if(bigGraphInverse.containsKey(vertexU))
+						bigGraphInverse.get(vertexU).add(vertexV);
+				else {
+					ArrayList<Integer> uList=new ArrayList<Integer>();
+					uList.add(vertexV);
+					bigGraphInverse.put(vertexU, uList);
+				}
+			}
+		}
+		return bigGraphInverse;
+	}
+	public HashMap<Integer, ArrayList<Integer>> eliminateSCC(HashMap<Integer, ArrayList<Integer>> bigGraph)
+	{
+		HashMap<Integer, ArrayList<Integer>> bigGraphScc=new HashMap<Integer, ArrayList<Integer>>();
+		HashMap<Integer, ArrayList<Integer>> bigGraphInverse=inverse(bigGraph);
+		DFS dfs=new DFS(bigGraph,nodes);
+		dfs.traverse();
+		System.out.println();
+		for(int i=0;i<dfs.finish.length;i++)
+			System.out.println(dfs.finish[i]);
+		System.out.println();
+		DFS dfsInverse=new DFS(bigGraphInverse,nodes);
+		dfsInverse.finish=dfs.finish;
+		dfsInverse.traverseInverse();
+		HashMap<Integer, Integer> map=new HashMap<Integer, Integer>();  //
+		int count=0;
+		for(int i=0;i<dfsInverse.dfsOrder.size();i++)
+		{
+			int temp=dfsInverse.dfsOrder.get(i);
+			if(temp!=-1)
+				map.put(temp, count);
+			else 
+				count++;
+		}
+		for(int i=0;i<count;i++)
+		{
+			ArrayList<Integer> arrayList=new ArrayList<Integer>();
+			bigGraphScc.put(i, arrayList);
+		}
+		for(int i=0;i<bigGraph.size();i++)
+		{
+			ArrayList<Integer> tempArrayList=bigGraph.get(i);
+			int vertexV=map.get(i);
+			for(int j=0;j<tempArrayList.size();j++)
+			{
+				int vertexU=map.get(tempArrayList.get(j));
+				if(!bigGraphScc.get(vertexV).contains(vertexU)&&vertexV!=vertexU)
+					bigGraphScc.get(vertexV).add(vertexU);
+			}
+		}
+		return bigGraphScc;
 	}
 	public static void main(String[] args) throws IOException {
-		SnapReader sr=new SnapReader("dataset/Email-Enron.txt");
+		SnapReader sr=new SnapReader("dataset/test.txt");
 	}
 
 }
