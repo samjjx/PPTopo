@@ -31,15 +31,12 @@ public class PPTopo {
 		int L=0;
 		while((L=PickLevel(graph, level))!=-1)
 		{
-			System.out.println("L is:"+L);
 			ArrayList<Integer> rm=level.get(L);
 			for(int i=0;i<rm.size();i++)
 			{
 				int c=rm.get(i);
 				addDesLabel(graph, label[0], c);
-				System.out.println(label[0]);
 				addAnsLabel(graph, label[1], c);
-				System.out.println(label[1]);
 				remove(graph, c);
 			}
 			level.remove(L);
@@ -131,8 +128,6 @@ public class PPTopo {
 		ArrayList<Integer> que=new ArrayList<Integer>();
 		int mark=0;
 
-		System.out.println("graph is:"+graph);
-		System.out.println("start is:"+ start);
 		que.addAll(graph.get(start));
 		while(mark<que.size())
 		{
@@ -173,9 +168,6 @@ public class PPTopo {
 			}
 		}
 		return bigGraphInverse;
-	}
-	public static void main(String[] args) {
-		
 	}
 	
 }

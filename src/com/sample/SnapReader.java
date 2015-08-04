@@ -97,29 +97,70 @@ public class SnapReader {
 				count++;
 		}
 		for(int i=0;i<count;i++)
+			bigGraphScc.put(i, new ArrayList<Integer>());
+		Set<Integer> keySet=bigGraph.keySet();
+		for(int key:keySet)
 		{
-			ArrayList<Integer> arrayList=new ArrayList<Integer>();
-			bigGraphScc.put(i, arrayList);
-		}
-		for(int i=0;i<bigGraph.size();i++)
-		{
-			ArrayList<Integer> tempArrayList=bigGraph.get(i);
-			int vertexV=map.get(i);
+			ArrayList<Integer> tempArrayList=bigGraph.get(key);
+			int vertexV=map.get(key);
 			for(int j=0;j<tempArrayList.size();j++)
 			{
 				int vertexU=map.get(tempArrayList.get(j));
+				
 				if(!bigGraphScc.get(vertexV).contains(vertexU)&&vertexV!=vertexU)
 					bigGraphScc.get(vertexV).add(vertexU);
 			}
 		}
 		return bigGraphScc;
 	}
+	public HashMap<Integer, ArrayList<Integer>> format(HashMap<Integer, ArrayList<Integer>> bigGraph)
+	{
+		HashMap<Integer, ArrayList<Integer>> fmGraph=new HashMap<Integer, ArrayList<Integer>>();
+		HashMap<Integer, Integer> maping=new HashMap<Integer, Integer>();
+		Set<Integer> keySet=bigGraph.keySet();
+		int count=0;
+		for(int vertexV:keySet)
+		{
+			if(!maping.containsKey(vertexV))
+			{
+				maping.put(vertexV, count);
+				count++;
+			}
+			if(!fmGraph.containsKey(maping.get(vertexV)))
+				fmGraph.put(maping.get(vertexV), new ArrayList<Integer>());
+			ArrayList<Integer> tempArrayList=bigGraph.get(vertexV);
+			for(int vertexU:tempArrayList)
+			{
+				if(!maping.containsKey(vertexU))
+				{
+					maping.put(vertexU, count);
+					count++;
+				}
+				fmGraph.get(maping.get(vertexV)).add(maping.get(vertexU));
+			}
+		}
+		return fmGraph;
+	}
+	public void printBigGraph(HashMap<Integer, ArrayList<Integer>> bigGraph)
+	{
+		Set<Integer> keySet=bigGraph.keySet();
+		for(int vertex:keySet)
+			System.out.println("[ "+vertex+" ]"+bigGraph.get(vertex));
+		
+	}
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		SnapReader sr=new SnapReader("dataset/test.txt");
-		HashMap<Integer, ArrayList<Integer>> temp=sr.eliminateSCC(sr.bigGraph);
-		System.out.println(temp);
+		System.out.println(sr.bigGraph.size());
+		HashMap<Integer, ArrayList<Integer>> temp=sr.format(sr.bigGraph);
+		System.out.println(temp.size());
+		temp=sr.eliminateSCC(temp);
+		System.out.println("Scc eliminated");
+		//System.out.println(temp);
 		PPTopo pptlable=new PPTopo();
-		System.out.println(pptlable.CreatePPTopo(temp)[1]);
+		HashMap<Integer, ArrayList<Integer>>[] result=pptlable.CreatePPTopo(temp);
+		System.out.println(result[0]);
+		System.out.println(result[1]);
 	}
 
 }

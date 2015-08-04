@@ -1,6 +1,5 @@
 package com.sample;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,14 +89,15 @@ public class DFS {
 		color[start]=1;
 		time++;
 		discover[start]=time;
-		for(int v:bigGraph.get(start))
-		{
-			if(color[v]==0)
+		if(bigGraph.containsKey(start))
+			for(int v:bigGraph.get(start))
 			{
-				ans[v]=start;
-				DFS_VISIT(v);
+				if(color[v]==0)
+				{
+					ans[v]=start;
+					DFS_VISIT(v);
+				}
 			}
-		}
 		color[start]=2;
 		time++;
 		finish[start]=time;
@@ -116,13 +116,5 @@ public class DFS {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		SnapReader sr=new SnapReader("dataset/test.txt");
-		DFS dfs=new DFS(sr.bigGraph,sr.nodes);
-		dfs.traverse();
-		for(int i=0;i<dfs.finish.length;i++)
-			System.out.println(dfs.finish[i]);
-		
-	}
 
 }
