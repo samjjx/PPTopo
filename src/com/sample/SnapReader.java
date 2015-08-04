@@ -19,7 +19,7 @@ public class SnapReader {
 	 * @param args
 	 */
 	HashMap<Integer,ArrayList<Integer>> bigGraph=new HashMap<Integer,ArrayList<Integer>>();    // Structure which stores the bigGraph
-	int[] color;      //Judge if the related node is visited
+
 	int nodes;
 	int edges;
 	public SnapReader(String filePath) throws IOException
@@ -36,7 +36,6 @@ public class SnapReader {
 					String[] graphInfo=tempLine.split(" ");
 					nodes=Integer.parseInt(graphInfo[2]);
 					edges=Integer.parseInt(graphInfo[4]);
-					color=new int[nodes];
 					continue;
 				}
 				else
@@ -81,10 +80,7 @@ public class SnapReader {
 		HashMap<Integer, ArrayList<Integer>> bigGraphInverse=inverse(bigGraph);
 		DFS dfs=new DFS(bigGraph,nodes);
 		dfs.traverse();
-		System.out.println();
-		for(int i=0;i<dfs.finish.length;i++)
-			System.out.println(dfs.finish[i]);
-		System.out.println();
+		
 		DFS dfsInverse=new DFS(bigGraphInverse,nodes);
 		dfsInverse.finish=dfs.finish;
 		dfsInverse.traverseInverse();
