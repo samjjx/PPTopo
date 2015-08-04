@@ -1,7 +1,6 @@
 package com.sample;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +21,7 @@ public class DFS {
 	int[] ans;        // the ancestor. -1 : NIL
 	int[] discover;   //first time see the node
 	int[] finish;     //leave time
-	int[] topoNumber;
+	int[] topoNumber; // stand for the level
 	ArrayList<Integer> dfsOrder=new ArrayList<Integer>();
 	public DFS(HashMap<Integer, ArrayList<Integer>> bigGraph,int nodes)
 	{
@@ -87,7 +86,6 @@ public class DFS {
 	}
 	public void DFS_VISIT(int start)
 	{
-		System.out.println(start);
 		dfsOrder.add(start);
 		color[start]=1;
 		time++;
@@ -117,6 +115,7 @@ public class DFS {
 					topoNumber[linkList.get(j)]=topoNumber[i]+1;
 		}
 	}
+	
 	public static void main(String[] args) throws IOException {
 		SnapReader sr=new SnapReader("dataset/test.txt");
 		DFS dfs=new DFS(sr.bigGraph,sr.nodes);

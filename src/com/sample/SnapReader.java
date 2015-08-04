@@ -25,6 +25,7 @@ public class SnapReader {
 	public SnapReader(String filePath) throws IOException
 	{
 		FileInputStream in=new FileInputStream(filePath);
+		@SuppressWarnings("resource")
 		BufferedReader br=new BufferedReader(new InputStreamReader(in));
 		String tempLine;
 		while((tempLine=br.readLine())!=null)
@@ -52,12 +53,13 @@ public class SnapReader {
 				bigGraph.put(vertex1, vList);
 			}
 		}
-		System.out.println(eliminateSCC(bigGraph));
 	}
 	public HashMap<Integer, ArrayList<Integer>> inverse(HashMap<Integer, ArrayList<Integer>> bigGraph)
 	{
 		HashMap<Integer, ArrayList<Integer>> bigGraphInverse=new HashMap<Integer, ArrayList<Integer>>();
 		Set<Integer> vertexSet=bigGraph.keySet();
+		for(int vertexV:vertexSet)
+			bigGraphInverse.put(vertexV, new ArrayList<Integer>());
 		for(int vertexV:vertexSet)
 		{
 			ArrayList<Integer> linkList=bigGraph.get(vertexV);
@@ -114,6 +116,10 @@ public class SnapReader {
 	}
 	public static void main(String[] args) throws IOException {
 		SnapReader sr=new SnapReader("dataset/test.txt");
+		HashMap<Integer, ArrayList<Integer>> temp=sr.eliminateSCC(sr.bigGraph);
+		System.out.println(temp);
+		PPTopo pptlable=new PPTopo();
+		System.out.println(pptlable.CreatePPTopo(temp)[1]);
 	}
 
 }

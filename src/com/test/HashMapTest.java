@@ -21,8 +21,13 @@ public class HashMapTest {
 		hm.put(1111, tempArrayList);
 		hm.get(1111).add(11111);
 		hm.put(1111, new ArrayList<Integer>());
+		test(hm);
 		System.out.println(hm.get(1111));
 		System.out.println(hm.size());
+	}
+	public static void test(HashMap<Integer,ArrayList<Integer>> temp)
+	{
+		temp.remove(1111);
 	}
 
 }
