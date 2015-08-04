@@ -1,5 +1,6 @@
 package com.sample;
 
+import java.awt.Label;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -148,19 +149,22 @@ public class SnapReader {
 			System.out.println("[ "+vertex+" ]"+bigGraph.get(vertex));
 		
 	}
+	public void printLabel(HashMap<Integer, ArrayList<Integer>> Label)
+	{
+		printBigGraph(Label);
+	}
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
-		SnapReader sr=new SnapReader("dataset/test.txt");
+		SnapReader sr=new SnapReader("dataset/Wiki-Vote.txt");
 		System.out.println(sr.bigGraph.size());
 		HashMap<Integer, ArrayList<Integer>> temp=sr.format(sr.bigGraph);
 		System.out.println(temp.size());
 		temp=sr.eliminateSCC(temp);
 		System.out.println("Scc eliminated");
-		//System.out.println(temp);
 		PPTopo pptlable=new PPTopo();
-		HashMap<Integer, ArrayList<Integer>>[] result=pptlable.CreatePPTopo(temp);
-		System.out.println(result[0]);
-		System.out.println(result[1]);
+		HashMap<Integer, ArrayList<Integer>>[] label=pptlable.CreatePPTopo(temp);
+		sr.printLabel(label[0]);
+		System.out.println(label[1]);
 	}
 
 }
