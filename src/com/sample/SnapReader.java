@@ -1,10 +1,11 @@
 package com.sample;
 
-import java.awt.Label;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -23,8 +24,10 @@ public class SnapReader {
 
 	int nodes;
 	int edges;
+	String labelPath="";
 	public SnapReader(String filePath) throws IOException
 	{
+		labelPath=labelStorePath(filePath);
 		FileInputStream in=new FileInputStream(filePath);
 		@SuppressWarnings("resource")
 		BufferedReader br=new BufferedReader(new InputStreamReader(in));
@@ -54,6 +57,11 @@ public class SnapReader {
 				bigGraph.put(vertex1, vList);
 			}
 		}
+	}
+	public String labelStorePath(String Path)
+	{
+		String[] temp=Path.split("/");
+		return temp[1].split(".txt")[0];
 	}
 	public HashMap<Integer, ArrayList<Integer>> inverse(HashMap<Integer, ArrayList<Integer>> bigGraph)
 	{
@@ -153,18 +161,59 @@ public class SnapReader {
 	{
 		printBigGraph(Label);
 	}
+	public int labelSize(HashMap<Integer, ArrayList<Integer>> Label)
+	{
+		int count=0;
+		Set<Integer> keySet=Label.keySet();
+		for(int key:keySet)
+			count+=Label.get(key).size();
+		return count;
+	}
+	public void storeLabel(HashMap<Integer, ArrayList<Integer>> Label,String path,String outIn) throws FileNotFoundException 
+	{
+		path="label/"+path+"("+outIn+").txt";
+		 PrintStream out = new PrintStream(path);  
+		 System.setOut(out);
+		 Set<Integer> keySet=Label.keySet();
+		 for(int vertex:keySet)
+		 {
+			 System.out.print(vertex+" ");
+			 for(int center:Label.get(vertex))
+				 System.out.print(center+" ");
+			 System.out.println();
+		 }
+		 System.setOut(System.out);
+	}
+	public int disCenter(HashMap<Integer, ArrayList<Integer>> Label)
+	{
+		Set<Integer> keySet=Label.keySet();
+		ArrayList<Integer> center=new ArrayList<Integer>();
+		for(int key:keySet)
+		{
+			ArrayList<Integer> temp=Label.get(key);
+			for(int vertex:temp)
+				if(!center.contains(vertex))
+					center.add(vertex);
+		}
+		return center.size();
+	}
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
-		SnapReader sr=new SnapReader("dataset/Wiki-Vote.txt");
-		System.out.println(sr.bigGraph.size());
+		SnapReader sr=new SnapReader("dataset/test.txt");
 		HashMap<Integer, ArrayList<Integer>> temp=sr.format(sr.bigGraph);
-		System.out.println(temp.size());
 		temp=sr.eliminateSCC(temp);
 		System.out.println("Scc eliminated");
 		PPTopo pptlable=new PPTopo();
 		HashMap<Integer, ArrayList<Integer>>[] label=pptlable.CreatePPTopo(temp);
-		sr.printLabel(label[0]);
+		System.out.println(label[0]);
 		System.out.println(label[1]);
+
+		PrintStream out = System.out;
+		sr.storeLabel(label[0], sr.labelPath,"in");
+		sr.storeLabel(label[1], sr.labelPath,"out");
+		System.setOut(out);
+		System.out.println("return");
+		
 	}
 
 }

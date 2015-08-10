@@ -43,6 +43,29 @@ public class PPTopo {
 		}
 		return label;
 	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public HashMap[] CreatePPTopoNode(HashMap<Integer, ArrayList<Integer>> graph)
+	{
+		HashMap[] label=new HashMap[2];
+		int nodes=graph.size();
+		label[0]=new HashMap<Integer, ArrayList<Integer>>();
+		label[1]=new HashMap<Integer, ArrayList<Integer>>();
+		for(int i=0;i<nodes;i++)
+		{
+			label[0].put(i, new ArrayList<Integer>());
+			label[1].put(i, new ArrayList<Integer>());
+		}
+		int L=0;
+		while((L=PickNode(graph))!=-1)
+		{
+			int c=L;
+			addDesLabel(graph, label[0], c);
+			addAnsLabel(graph, label[1], c);
+			remove(graph, c);
+			
+		}
+		return label;
+	}
 	public void addDesLabel(HashMap<Integer, ArrayList<Integer>> graph, HashMap<Integer,ArrayList<Integer>> lin,int start)
 	{
 		ArrayList<Integer> que=new ArrayList<Integer>();
@@ -59,6 +82,13 @@ public class PPTopo {
 		}
 		for(int i=0;i<que.size();i++)
 			lin.get(que.get(i)).add(start);
+		if(ansNumber(graph, start)==0)
+		{
+			ArrayList<Integer> temp=lin.get(start);
+			for(int i=0;i<temp.size();i++)
+				if(temp.get(i)==start)
+					temp.remove(i);
+		}
 	}
 	public void addAnsLabel(HashMap<Integer, ArrayList<Integer>> graph, HashMap<Integer,ArrayList<Integer>> lout,int start)
 	{
@@ -80,6 +110,54 @@ public class PPTopo {
 				result=key;
 			}
 		}
+		if(temp==0&&result==-1)
+		{
+			for(int key:keyset)
+			{
+				double value=oneLevel(graph, level.get(key));
+				if(value>temp)
+				{
+					temp=value;
+					result=key;
+				}
+			}
+		}
+		return result;
+	}
+	public double oneLevel(HashMap<Integer, ArrayList<Integer>> graph,ArrayList<Integer> level)
+	{
+		int sum=0;
+		for(int i=0;i<level.size();i++)
+			sum+=ansNumber(graph, level.get(i))+desNumber(graph, level.get(i));
+		if(level.size()!=0)
+			return (double)sum/level.size();
+		else
+			return sum;
+	}
+	public int PickNode(HashMap<Integer, ArrayList<Integer>> graph)
+	{
+		double temp=0;
+		int result=-1;
+		Set<Integer> keyset=graph.keySet();
+		for(int key:keyset)
+		{
+			double value=ansNumber(graph, key)*desNumber(graph, key);
+			if(value>temp)
+			{
+				temp=value;
+				result=key;
+			}
+		}
+		if(temp==0&&result==-1)
+			for(int key:keyset)
+			{
+				double value=ansNumber(graph, key)+desNumber(graph, key);
+				if(value>temp)
+				{
+					temp=value;
+					result=key;
+				}
+			}	
 		return result;
 	}
 	public double Util(HashMap<Integer, ArrayList<Integer>> graph,ArrayList<Integer> level)

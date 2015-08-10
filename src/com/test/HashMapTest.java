@@ -24,6 +24,8 @@ public class HashMapTest {
 		test(hm);
 		System.out.println(hm.get(1111));
 		System.out.println(hm.size());
+		String test="test.txt";
+		System.out.println(test.split(".")[0]);
 	}
 	public static void test(HashMap<Integer,ArrayList<Integer>> temp)
 	{
