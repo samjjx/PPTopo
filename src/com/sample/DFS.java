@@ -14,6 +14,7 @@ public class DFS {
 	 * @param args
 	 */
 	HashMap<Integer, ArrayList<Integer>> bigGraph;
+	int debug=0;
 	int nodes;
 	int[] color;      //Judge if the related node is visited. 0:White 1£ºGray 2 Black
 	int time=0;       //program time

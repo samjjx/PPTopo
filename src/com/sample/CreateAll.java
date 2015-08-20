@@ -19,16 +19,16 @@ public class CreateAll {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		ArrayList<String> dataList=new ArrayList<String>();
-		dataList.add("dataset/test.txt");
+////		dataList.add("dataset/test.txt");
 //		dataList.add("dataset/p2p-Gnutella04.txt");
 //		dataList.add("dataset/p2p-Gnutella05.txt");
 //		dataList.add("dataset/p2p-Gnutella06.txt");
 //		dataList.add("dataset/p2p-Gnutella08.txt");
 //		dataList.add("dataset/p2p-Gnutella09.txt");
-		dataList.add("dataset/p2p-Gnutella24.txt");
-		dataList.add("dataset/p2p-Gnutella25.txt");
-		dataList.add("dataset/p2p-Gnutella30.txt");
-		//dataList.add("dataset/p2p-Gnutella31.txt");
+//		dataList.add("dataset/p2p-Gnutella24.txt");
+//		dataList.add("dataset/p2p-Gnutella25.txt");
+//		dataList.add("dataset/p2p-Gnutella30.txt");
+		dataList.add("dataset/p2p-Gnutella31.txt");
 //		dataList.add("dataset/Wiki-Vote.txt");
 		PrintStream out = System.out;
 		for(String dataSet:dataList)
@@ -39,7 +39,7 @@ public class CreateAll {
 			System.out.println(dataSet+" Scc eliminated");
 			System.out.println(temp.size());
 			PPTopo pptlable=new PPTopo();
-			HashMap<Integer, ArrayList<Integer>>[] label=pptlable.CreatePPTopoNode(temp);
+			HashMap<Integer, ArrayList<Integer>>[] label=pptlable.CreatePPTopo(temp);
 //			System.out.println(label[0]);
 //			System.out.println(label[1]);
 			sr.storeLabel(label[0], sr.labelPath,"in");

@@ -66,6 +66,59 @@ public class PPTopo {
 		}
 		return label;
 	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public HashMap[] CreatePPTopoBrFS(HashMap<Integer, ArrayList<Integer>> graph)
+	{
+		HashMap[] label=new HashMap[2];
+		int nodes=graph.size();
+		label[0]=new HashMap<Integer, ArrayList<Integer>>();
+		label[1]=new HashMap<Integer, ArrayList<Integer>>();
+		for(int i=0;i<nodes;i++)
+		{
+			label[0].put(i, new ArrayList<Integer>());
+			label[1].put(i, new ArrayList<Integer>());
+		}
+		int[]topoNumber=createTopoNumber(graph);
+		HashMap<Integer, ArrayList<Integer>> level=seperateLevel(topoNumber);
+		int L=0;
+		while((L=PickLevelByFS(graph, level))!=-1)
+		{
+			ArrayList<Integer> rm=level.get(L);
+			for(int i=0;i<rm.size();i++)
+			{
+				int c=rm.get(i);
+				addDesLabel(graph, label[0], c);
+				addAnsLabel(graph, label[1], c);
+				remove(graph, c);
+			}
+			level.remove(L);
+		}
+		return label;
+	}
+	public int PickLevelByFS(HashMap<Integer, ArrayList<Integer>> graph,HashMap<Integer, ArrayList<Integer>> level)
+	{
+		double temp=1;
+		int result=-1;
+		Set<Integer> keyset=level.keySet();
+		for(int key:keyset)
+		{
+			double value=UtilByFS(graph, level.get(key));
+			if(value>temp)
+			{
+				temp=value;
+				result=key;
+			}
+		}
+		return result;
+	}
+	public double UtilByFS(HashMap<Integer, ArrayList<Integer>> graph,ArrayList<Integer> level)
+	{
+		int sum=0;
+		HashMap<Integer, ArrayList<Integer>> inverseGraph=inverse(graph);
+		for(int i=0;i<level.size();i++)
+			sum+=(graph.get(level.get(i)).size()+inverseGraph.get(level.get(i)).size());
+		return (double)sum/level.size();
+	}
 	public void addDesLabel(HashMap<Integer, ArrayList<Integer>> graph, HashMap<Integer,ArrayList<Integer>> lin,int start)
 	{
 		ArrayList<Integer> que=new ArrayList<Integer>();
@@ -98,7 +151,7 @@ public class PPTopo {
 	
 	public int PickLevel(HashMap<Integer, ArrayList<Integer>> graph,HashMap<Integer, ArrayList<Integer>> level)
 	{
-		double temp=0;
+		double temp=1;
 		int result=-1;
 		Set<Integer> keyset=level.keySet();
 		for(int key:keyset)
@@ -108,18 +161,6 @@ public class PPTopo {
 			{
 				temp=value;
 				result=key;
-			}
-		}
-		if(temp==0&&result==-1)
-		{
-			for(int key:keyset)
-			{
-				double value=oneLevel(graph, level.get(key));
-				if(value>temp)
-				{
-					temp=value;
-					result=key;
-				}
 			}
 		}
 		return result;
@@ -136,35 +177,26 @@ public class PPTopo {
 	}
 	public int PickNode(HashMap<Integer, ArrayList<Integer>> graph)
 	{
-		double temp=0;
+		double temp=1;
 		int result=-1;
 		Set<Integer> keyset=graph.keySet();
 		for(int key:keyset)
 		{
-			double value=ansNumber(graph, key)*desNumber(graph, key);
+			int value=(ansNumber(graph, key)+1)*(desNumber(graph, key)+1);
 			if(value>temp)
 			{
 				temp=value;
 				result=key;
 			}
 		}
-		if(temp==0&&result==-1)
-			for(int key:keyset)
-			{
-				double value=ansNumber(graph, key)+desNumber(graph, key);
-				if(value>temp)
-				{
-					temp=value;
-					result=key;
-				}
-			}	
+		
 		return result;
 	}
 	public double Util(HashMap<Integer, ArrayList<Integer>> graph,ArrayList<Integer> level)
 	{
 		int sum=0;
 		for(int i=0;i<level.size();i++)
-			sum+=ansNumber(graph, level.get(i))*desNumber(graph, level.get(i));
+			sum+=(ansNumber(graph, level.get(i))+1)*(desNumber(graph, level.get(i))+1);
 		return (double)sum/level.size();
 	}
 	public void remove(HashMap<Integer, ArrayList<Integer>> graph,int vertex)

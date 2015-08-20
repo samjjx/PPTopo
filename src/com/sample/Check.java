@@ -96,8 +96,10 @@ public class Check {
 		FileInputStream in;
 		if(LorN==0)
 			in=new FileInputStream("labellevel/"+dataset);
-		else
+		else if(LorN==1)
 			in=new FileInputStream("label/"+dataset);
+		else
+			in=new FileInputStream("labelByFS/"+dataset);
 		
 		BufferedReader br=new BufferedReader(new InputStreamReader(in));
 		String tempLine;
@@ -132,9 +134,9 @@ public class Check {
 		System.out.println("[ "+a+" ]"+bigGraph.get(a));
 	}
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		Check ck=new Check("p2p-Gnutella08");
+		Check ck=new Check("p2p-Gnutella05");
 		//1 stand node-time, 0 stand for level
-		ck.start(50000,1);
+		ck.start(500000,2);
 		
 	}
 

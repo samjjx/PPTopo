@@ -171,7 +171,7 @@ public class SnapReader {
 	}
 	public void storeLabel(HashMap<Integer, ArrayList<Integer>> Label,String path,String outIn) throws FileNotFoundException 
 	{
-		path="label/"+path+"("+outIn+").txt";
+		path="labellevel/"+path+"("+outIn+").txt";
 		 PrintStream out = new PrintStream(path);  
 		 System.setOut(out);
 		 Set<Integer> keySet=Label.keySet();

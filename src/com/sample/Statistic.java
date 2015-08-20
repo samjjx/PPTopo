@@ -93,8 +93,10 @@ public class Statistic {
 		FileInputStream in;
 		if(LorN==0)
 			in=new FileInputStream("labellevel/"+dataset);
-		else
+		else if(LorN==1)
 			in=new FileInputStream("label/"+dataset);
+		else
+			in=new FileInputStream("labelByFS/"+dataset);
 		
 		BufferedReader br=new BufferedReader(new InputStreamReader(in));
 		String tempLine;
@@ -114,9 +116,26 @@ public class Statistic {
 		dataList.add("p2p-Gnutella06");
 		dataList.add("p2p-Gnutella08");
 		dataList.add("p2p-Gnutella09");
-//		dataList.add("p2p-Gnutella24");
-//		dataList.add("p2p-Gnutella25");
-//		dataList.add("p2p-Gnutella30");
+		dataList.add("p2p-Gnutella24");
+		dataList.add("p2p-Gnutella25");
+		dataList.add("p2p-Gnutella30");
+		dataList.add("Wiki-Vote");
+		for(String dataset:dataList)
+		{
+			Statistic st=new Statistic(dataset, 0);
+			st.printInfo();
+		}
+		for(String dataset:dataList)
+		{
+			Statistic st=new Statistic(dataset, 2);
+			st.printInfo();
+		}
+		dataList.clear();
+		dataList.add("p2p-Gnutella04");
+		dataList.add("p2p-Gnutella05");
+		dataList.add("p2p-Gnutella06");
+		dataList.add("p2p-Gnutella08");
+		dataList.add("p2p-Gnutella09");
 		dataList.add("Wiki-Vote");
 		for(String dataset:dataList)
 		{
